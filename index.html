@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>小单文章题目参考 · 论文题目索引库</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@500;600;700&family=Noto+Sans+SC:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #EFEEE7;
+    --panel: #FBFAF6;
+    --panel-2: #F5F3EC;
+    --ink: #24291F;
+    --ink-soft: #565246;
+    --line: #D8D3C4;
+    --line-strong: #C7C1AE;
+    --accent: #8B3A3A;
+    --accent-soft: #F1E2DC;
+    --brass: #B08830;
+    --brass-soft: #F1E7CE;
+    --radius: 3px;
+    font-size: 16px;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background: var(--bg);
+    color: var(--ink);
+    font-family:'Noto Sans SC', -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft Yahei', sans-serif;
+    -webkit-font-smoothing:antialiased;
+    min-height:100vh;
+  }
+  body::before{
+    content:"";
+    position:fixed; inset:0;
+    background-image:
+      linear-gradient(var(--line) 1px, transparent 1px);
+    background-size: 100% 44px;
+    opacity:.28;
+    pointer-events:none;
+    z-index:0;
+  }
+  .wrap{position:relative; z-index:1; max-width:1240px; margin:0 auto; padding:0 28px 64px;}
+
+  /* ---------- Header ---------- */
+  header.site{
+    padding:40px 0 22px;
+    border-bottom: 2px solid var(--ink);
+  }
+  .eyebrow{
+    font-family:'JetBrains Mono', monospace;
+    font-size:11.5px;
+    letter-spacing:.16em;
+    color:var(--ink-soft);
+    text-transform:uppercase;
+    margin:0 0 10px;
+    display:flex; align-items:center; gap:10px;
+  }
+  .eyebrow::before{
+    content:"";
+    display:inline-block; width:20px; height:1px; background:var(--accent);
+  }
+  h1.title{
+    font-family:'Noto Serif SC', serif;
+    font-weight:700;
+    font-size:clamp(30px, 4vw, 44px);
+    letter-spacing:.01em;
+    margin:0 0 8px;
+  }
+  p.subtitle{
+    margin:0;
+    color:var(--ink-soft);
+    font-size:14.5px;
+    max-width:640px;
+    line-height:1.6;
+  }
+  .stamp{
+    position:relative;
+    display:inline-flex; align-items:center; gap:8px;
+    margin-top:18px;
+    padding:6px 14px 6px 12px;
+    border:1.5px solid var(--accent);
+    color:var(--accent);
+    border-radius:999px;
+    font-family:'JetBrains Mono', monospace;
+    font-size:12px;
+    letter-spacing:.03em;
+    transform:rotate(-1.2deg);
+  }
+  .stamp b{font-size:14px;}
+
+  /* ---------- Search ---------- */
+  .search-row{
+    margin-top:26px;
+    display:flex; gap:10px;
+  }
+  .search-box{
+    flex:1;
+    display:flex; align-items:center; gap:10px;
+    background:var(--panel);
+    border:1.5px solid var(--ink);
+    border-radius: var(--radius);
+    padding:0 6px 0 16px;
+  }
+  .search-box svg{flex:none; opacity:.55;}
+  .search-box input{
+    min-width:0;
+    flex:1;
+    border:none; outline:none; background:transparent;
+    font-family:inherit; font-size:15.5px; color:var(--ink);
+    padding:14px 8px;
+  }
+  .search-box input::placeholder{color:#9A9686;}
+  .search-box.major-search{max-width:310px;}
+  .action-btn{
+    font-family:'JetBrains Mono', monospace;
+    font-size:12.5px;
+    letter-spacing:.03em;
+    border:1.5px solid var(--ink);
+    background:var(--ink);
+    color:var(--panel);
+    border-radius:var(--radius);
+    padding:0 18px;
+    cursor:pointer;
+    white-space:nowrap;
+  }
+  .action-btn:hover{background:var(--accent); border-color:var(--accent);}
+  .clear-btn{
+    background:var(--panel);
+    color:var(--ink);
+  }
+  .clear-btn:hover{color:var(--panel);}
+
+  /* ---------- Year tabs (catalog drawer look) ---------- */
+  .year-tabs{
+    display:flex; gap:8px; margin-top:28px; flex-wrap:wrap;
+  }
+  .year-tab{
+    position:relative;
+    font-family:'JetBrains Mono', monospace;
+    font-size:13.5px;
+    letter-spacing:.03em;
+    padding:10px 20px 9px;
+    background:var(--panel-2);
+    border:1.5px solid var(--line-strong);
+    border-bottom:none;
+    border-radius:6px 6px 0 0;
+    cursor:pointer;
+    color:var(--ink-soft);
+    top:2px;
+  }
+  .year-tab .n{opacity:.6; margin-left:6px; font-size:11.5px;}
+  .year-tab.active{
+    background:var(--panel);
+    color:var(--ink);
+    border-color:var(--ink);
+    font-weight:600;
+    top:0;
+    box-shadow: 0 -2px 0 var(--brass) inset;
+  }
+  .year-tab:hover:not(.active){color:var(--ink);}
+
+  /* ---------- Body layout ---------- */
+  .layout{
+    display:flex; gap:0;
+    border:1.5px solid var(--ink);
+    border-top:none;
+    background:var(--panel);
+    min-height:560px;
+  }
+  aside.majors{
+    width:290px; flex:none;
+    border-right:1.5px solid var(--ink);
+    display:flex; flex-direction:column;
+  }
+  .majors-head{
+    padding:16px 18px 12px;
+    border-bottom:1px solid var(--line);
+    display:flex; align-items:center; justify-content:space-between;
+    gap:8px;
+  }
+  .majors-head h2{
+    font-family:'Noto Serif SC', serif;
+    font-size:15px; margin:0; font-weight:600;
+  }
+  .sort-toggle{
+    font-family:'JetBrains Mono', monospace;
+    font-size:11px;
+    color:var(--ink-soft);
+    background:none; border:1px solid var(--line-strong);
+    border-radius:3px; padding:4px 8px; cursor:pointer;
+  }
+  .sort-toggle:hover{border-color:var(--ink);}
+  .majors-list{
+    overflow-y:auto;
+    flex:1;
+    max-height:640px;
+  }
+  .major-item{
+    display:flex; align-items:baseline; justify-content:space-between; gap:10px;
+    width:100%;
+    padding:9px 18px;
+    border-bottom:1px solid var(--line);
+    background:none; border-left:3px solid transparent;
+    text-align:left; cursor:pointer;
+    font-size:13.6px; color:var(--ink);
+  }
+  .major-item .name{
+    overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
+  }
+  .major-item .cnt{
+    font-family:'JetBrains Mono',monospace; font-size:11.5px; color:var(--ink-soft); flex:none;
+  }
+  .major-item:hover{background:var(--panel-2);}
+  .major-item.active{
+    background:var(--brass-soft);
+    border-left-color:var(--brass);
+    font-weight:600;
+  }
+  .major-item.all-item{
+    border-bottom:1.5px solid var(--ink);
+    font-weight:600;
+    background:var(--panel-2);
+  }
+
+  main.results{
+    flex:1; min-width:0;
+    display:flex; flex-direction:column;
+  }
+  .results-head{
+    padding:16px 24px;
+    border-bottom:1px solid var(--line);
+    display:flex; align-items:center; justify-content:space-between; gap:12px;
+    flex-wrap:wrap;
+  }
+  .breadcrumb{
+    font-size:13.5px; color:var(--ink-soft);
+  }
+  .breadcrumb b{color:var(--ink); font-weight:600;}
+  .result-count{
+    font-family:'JetBrains Mono', monospace;
+    font-size:12px; color:var(--ink-soft);
+  }
+  .result-count b{color:var(--accent);}
+
+  .results-body{
+    flex:1;
+    padding: 4px 0;
+  }
+  .entry{
+    display:flex; gap:16px; align-items:flex-start;
+    padding:14px 24px;
+    border-bottom:1px solid var(--line);
+  }
+  .entry:hover{background:var(--panel-2);}
+  .entry .tags{
+    flex:none; display:flex; gap:6px; padding-top:2px;
+  }
+  .tag{
+    font-family:'JetBrains Mono', monospace;
+    font-size:10.5px;
+    padding:2px 7px;
+    border-radius:3px;
+    letter-spacing:.02em;
+    white-space:nowrap;
+  }
+  .tag.year{background:var(--brass-soft); color:#7A5B1D; border:1px solid #E3D3A3;}
+  .tag.major{background:var(--accent-soft); color:var(--accent); border:1px solid #E4C9C2; max-width:150px; overflow:hidden; text-overflow:ellipsis;}
+  .tag.rate{font-weight:600;}
+  .tag.rate-low{background:#E4EFE3; color:#3B6B37; border:1px solid #C9DFC6;}
+  .tag.rate-mid{background:#FBF0DA; color:#8A6512; border:1px solid #EEDBAA;}
+  .tag.rate-high{background:#F7E1DE; color:#A13F35; border:1px solid #EFC5BE;}
+  .entry .txt{font-size:14.5px; line-height:1.55;}
+
+  .empty-state, .no-result{
+    padding:80px 24px; text-align:center; color:var(--ink-soft);
+  }
+  .empty-state h3, .no-result h3{
+    font-family:'Noto Serif SC', serif; color:var(--ink); font-size:19px; margin:0 0 10px;
+  }
+  .empty-state p, .no-result p{font-size:13.5px; margin:0; line-height:1.7;}
+  .empty-state .hint-majors{
+    margin-top:20px; display:flex; gap:8px; flex-wrap:wrap; justify-content:center; max-width:520px; margin-left:auto; margin-right:auto;
+  }
+  .hint-chip{
+    font-family:'JetBrains Mono',monospace; font-size:12px;
+    border:1px solid var(--line-strong); border-radius:999px;
+    padding:5px 13px; cursor:pointer; background:var(--panel);
+  }
+  .hint-chip:hover{border-color:var(--accent); color:var(--accent);}
+
+  .load-more-row{
+    padding:22px 24px 30px; text-align:center;
+  }
+  .load-more{
+    font-family:'JetBrains Mono', monospace; font-size:13px;
+    border:1.5px solid var(--ink); background:var(--panel);
+    padding:10px 26px; border-radius:999px; cursor:pointer;
+    letter-spacing:.03em;
+  }
+  .load-more:hover{background:var(--ink); color:var(--panel);}
+
+  footer.site{
+    margin-top:26px; padding-top:18px;
+    border-top:1px solid var(--line-strong);
+    color:var(--ink-soft); font-size:12px;
+    display:flex; justify-content:space-between; flex-wrap:wrap; gap:8px;
+    font-family:'JetBrains Mono', monospace;
+  }
+
+  ::-webkit-scrollbar{width:9px;}
+  ::-webkit-scrollbar-thumb{background:var(--line-strong); border-radius:5px;}
+  ::-webkit-scrollbar-track{background:transparent;}
+
+  @media (max-width: 860px){
+    .layout{flex-direction:column;}
+    aside.majors{display:none;}
+    .search-row{flex-direction:column;}
+    .search-box.major-search{max-width:none;}
+    .action-btn{padding:12px 18px;}
+    .wrap{padding:0 16px 48px;}
+    .results-head{padding:14px 16px;}
+    .entry{display:flex; flex-direction:column; gap:8px; padding:14px 16px;}
+    .entry .txt{order:1; font-size:15px; line-height:1.55; width:100%;}
+    .entry .tags{order:2; flex-wrap:wrap; gap:6px; padding-top:0; width:100%;}
+    .tag.major{max-width:100%;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="site">
+    <p class="eyebrow">THESIS TITLE ARCHIVE · REFERENCE INDEX</p>
+    <h1 class="title">小单文章题目参考</h1>
+    <p class="subtitle">按年份、专业分类整理的论文题目索引库，支持跨年份检索题目与专业关键词；2026年数据额外收录论文查重率与AI（AIGC）检测率，用于选题参考与查重比对。</p>
+    <div class="stamp" id="statStamp"><b>—</b> 条题目 · 收录中</div>
+
+    <div class="search-row">
+      <div class="search-box">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input id="titleInput" type="text" placeholder="题目关键词，例如：幼儿 / 人工智能 / 教学设计…" autocomplete="off">
+      </div>
+      <div class="search-box major-search">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        <input id="majorInput" type="text" placeholder="专业关键词，例如：学前教育…" autocomplete="off">
+      </div>
+      <button class="action-btn search-btn" id="searchBtn">搜索</button>
+      <button class="action-btn clear-btn" id="clearBtn">清空</button>
+    </div>
+
+    <div class="year-tabs" id="yearTabs"></div>
+  </header>
+
+  <div class="layout">
+    <aside class="majors">
+      <div class="majors-head">
+        <h2 id="majorsTitle">专业分类</h2>
+        <button class="sort-toggle" id="sortToggle">按数量 ↓</button>
+      </div>
+      <div class="majors-list" id="majorsList"></div>
+    </aside>
+
+    <main class="results">
+      <div class="results-head">
+        <div class="breadcrumb" id="breadcrumb"></div>
+        <div class="result-count" id="resultCount"></div>
+      </div>
+      <div class="results-body" id="resultsBody"></div>
+      <div class="load-more-row" id="loadMoreRow" style="display:none;">
+        <button class="load-more" id="loadMoreBtn">加载更多 ↓</button>
+      </div>
+    </main>
+  </div>
+
+  <footer class="site">
+    <span>小单文章题目参考 · 本地静态索引，数据仅存于本文件内，不上传任何服务器</span>
+    <span id="footYears"></span>
+  </footer>
+</div>
+
+<script>window.__TITLE_DATA={"years":["2026","2025","2024"],"stats":{"2024":{"total":153447,"majors":669},"2025":{"total":168334,"majors":754},"2026":{"total":47052,"majors":273}},"data":{}};</script>
+<script src="data-2026.js"></script>
+<script src="data-2025.js"></script>
+<script src="data-2024.js"></script>
+
+<script>
+(function(){
+  const raw = window.__TITLE_DATA;
+  const YEARS = raw.years;             // e.g. ['2026','2025'], newest first
+  const STATS = raw.stats;             // {year: {total, majors}}
+  const DATA = raw.data;               // {year: {major: [titles...]}}
+
+  const grandTotal = Object.values(STATS).reduce((a,s)=>a+s.total,0);
+  document.getElementById('statStamp').innerHTML = '<b>'+grandTotal.toLocaleString('en-US')+'</b> 条题目 · 覆盖 '+YEARS.length+' 个年度';
+  document.getElementById('footYears').textContent = '覆盖年度：' + YEARS.slice().sort((a,b)=>a-b).join(' · ');
+
+  // ---- Build combined major -> total count map (for "全部年份" scope) ----
+  const combinedMajors = {};
+  YEARS.forEach(y=>{
+    Object.keys(DATA[y]).forEach(m=>{
+      combinedMajors[m] = (combinedMajors[m]||0) + DATA[y][m].length;
+    });
+  });
+
+  // ---- Flat list for search (built once) ----
+  // each raw row is [title, check_rate|null, ai_rate|null]
+  const FLAT = [];
+  YEARS.forEach(y=>{
+    Object.keys(DATA[y]).forEach(m=>{
+      DATA[y][m].forEach(row=>{
+        FLAT.push({y, m, t:row[0], cr:row[1], ar:row[2]});
+      });
+    });
+  });
+
+  // ---- State ----
+  let state = {
+    scope: 'all',        // 'all' or a specific year string
+    major: null,          // selected major name, or null = none selected
+    titleQuery: '',
+    majorQuery: '',
+    sortByCount: true,
+    renderLimit: 100
+  };
+
+  const PAGE_SIZE = 100;
+
+  // ---- DOM refs ----
+  const yearTabsEl = document.getElementById('yearTabs');
+  const majorsListEl = document.getElementById('majorsList');
+  const majorsTitleEl = document.getElementById('majorsTitle');
+  const sortToggleEl = document.getElementById('sortToggle');
+  const titleInput = document.getElementById('titleInput');
+  const majorInput = document.getElementById('majorInput');
+  const searchBtn = document.getElementById('searchBtn');
+  const clearBtn = document.getElementById('clearBtn');
+  const breadcrumbEl = document.getElementById('breadcrumb');
+  const resultCountEl = document.getElementById('resultCount');
+  const resultsBodyEl = document.getElementById('resultsBody');
+  const loadMoreRow = document.getElementById('loadMoreRow');
+  const loadMoreBtn = document.getElementById('loadMoreBtn');
+
+  function esc(s){
+    return s.replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  }
+
+  function rateClass(v){
+    if (v < 15) return 'rate-low';
+    if (v < 25) return 'rate-mid';
+    return 'rate-high';
+  }
+
+  // ---- Render year tabs ----
+  function renderYearTabs(){
+    let html = '<div class="year-tab'+(state.scope==='all'?' active':'')+'" data-year="all">全部年份<span class="n">'+grandTotal.toLocaleString('en-US')+'</span></div>';
+    YEARS.forEach(y=>{
+      html += '<div class="year-tab'+(state.scope===y?' active':'')+'" data-year="'+y+'">'+y+' 年<span class="n">'+STATS[y].total.toLocaleString('en-US')+'</span></div>';
+    });
+    yearTabsEl.innerHTML = html;
+    yearTabsEl.querySelectorAll('.year-tab').forEach(el=>{
+      el.addEventListener('click', ()=>{
+        state.scope = el.dataset.year;
+        state.major = null;
+        state.renderLimit = PAGE_SIZE;
+        renderYearTabs();
+        renderMajors();
+        renderResults();
+      });
+    });
+  }
+
+  // ---- Get majors map for current scope ----
+  function getMajorsMap(){
+    if (state.scope === 'all') return combinedMajors;
+    return Object.fromEntries(Object.keys(DATA[state.scope]).map(m=>[m, DATA[state.scope][m].length]));
+  }
+
+  // ---- Render majors sidebar ----
+  function renderMajors(){
+    const map = getMajorsMap();
+    let entries = Object.entries(map);
+    if (state.sortByCount){
+      entries.sort((a,b)=> b[1]-a[1] || a[0].localeCompare(b[0],'zh'));
+    } else {
+      entries.sort((a,b)=> a[0].localeCompare(b[0],'zh'));
+    }
+    majorsTitleEl.textContent = '专业分类 (' + entries.length + ')';
+
+    let html = '<div class="major-item all-item'+(state.major===null?' active':'')+'" data-major="">'
+      + '<span class="name">全部专业</span><span class="cnt">'+Object.values(map).reduce((a,b)=>a+b,0).toLocaleString('en-US')+'</span></div>';
+
+    entries.forEach(([m,c])=>{
+      html += '<div class="major-item'+(state.major===m?' active':'')+'" data-major="'+esc(m)+'">'
+        + '<span class="name">'+esc(m)+'</span><span class="cnt">'+c.toLocaleString('en-US')+'</span></div>';
+    });
+    majorsListEl.innerHTML = html;
+
+    majorsListEl.querySelectorAll('.major-item').forEach(el=>{
+      el.addEventListener('click', ()=>{
+        const m = el.dataset.major;
+        state.major = m === '' ? null : m;
+        state.renderLimit = PAGE_SIZE;
+        renderMajors();
+        renderResults();
+      });
+    });
+  }
+
+  // ---- Compute filtered results ----
+  function getFiltered(){
+    const titleQ = state.titleQuery.trim().toLowerCase();
+    const majorQ = state.majorQuery.trim().toLowerCase();
+
+    if (titleQ || majorQ){
+      let list = FLAT;
+      if (state.scope !== 'all') list = list.filter(e=>e.y===state.scope);
+      if (state.major) list = list.filter(e=>e.m===state.major);
+      if (titleQ) list = list.filter(e => e.t.toLowerCase().includes(titleQ));
+      if (majorQ) list = list.filter(e => e.m.toLowerCase().includes(majorQ));
+      return list;
+    }
+
+    if (state.major === null) return null; // no selection, no query -> empty-state
+
+    if (state.scope !== 'all'){
+      const arr = DATA[state.scope][state.major] || [];
+      return arr.map(row=>({y: state.scope, m: state.major, t:row[0], cr:row[1], ar:row[2]}));
+    } else {
+      let list = [];
+      YEARS.forEach(y=>{
+        if (DATA[y][state.major]) DATA[y][state.major].forEach(row=> list.push({y, m: state.major, t:row[0], cr:row[1], ar:row[2]}));
+      });
+      return list;
+    }
+  }
+
+  // ---- Render breadcrumb ----
+  function renderBreadcrumb(){
+    const scopeLabel = state.scope==='all' ? '全部年份' : (state.scope+' 年');
+    const majorLabel = state.major || '全部专业';
+    const parts = [];
+    if (state.titleQuery) parts.push('题目 “'+esc(state.titleQuery)+'”');
+    if (state.majorQuery) parts.push('专业 “'+esc(state.majorQuery)+'”');
+    breadcrumbEl.innerHTML = '<b>'+scopeLabel+'</b> · <b>'+esc(majorLabel)+'</b>' + (parts.length ? ' · 搜索 ' + parts.join(' · ') : '');
+  }
+
+  // ---- Render results ----
+  function renderResults(){
+    renderBreadcrumb();
+    const filtered = getFiltered();
+
+    if (filtered === null){
+      resultCountEl.textContent = '';
+      loadMoreRow.style.display = 'none';
+      const map = getMajorsMap();
+      const top = Object.entries(map).sort((a,b)=>b[1]-a[1]).slice(0,8).map(e=>e[0]);
+      resultsBodyEl.innerHTML = '<div class="empty-state">'
+        + '<h3>请选择左侧专业分类，或直接搜索题目</h3>'
+        + '<p>当前范围内共收录 '+Object.values(map).reduce((a,b)=>a+b,0).toLocaleString('en-US')+' 条题目 · '+Object.keys(map).length+' 个专业</p>'
+        + '<div class="hint-majors">'+top.map(m=>'<span class="hint-chip" data-m="'+esc(m)+'">'+esc(m)+'</span>').join('')+'</div>'
+        + '</div>';
+      resultsBodyEl.querySelectorAll('.hint-chip').forEach(el=>{
+        el.addEventListener('click', ()=>{
+          state.major = el.dataset.m;
+          state.renderLimit = PAGE_SIZE;
+          renderMajors();
+          renderResults();
+        });
+      });
+      return;
+    }
+
+    resultCountEl.innerHTML = '共 <b>'+filtered.length.toLocaleString('en-US')+'</b> 条';
+
+    if (filtered.length === 0){
+      resultsBodyEl.innerHTML = '<div class="no-result"><h3>没有找到匹配的题目</h3><p>试试更换关键词，或清空搜索条件后按专业浏览</p></div>';
+      loadMoreRow.style.display = 'none';
+      return;
+    }
+
+    const slice = filtered.slice(0, state.renderLimit);
+    let html = '';
+    slice.forEach(e=>{
+      let extraTags = '';
+      if (e.cr !== null && e.cr !== undefined){
+        extraTags += '<span class="tag rate '+rateClass(e.cr)+'">查重 '+e.cr+'%</span>';
+      }
+      if (e.ar !== null && e.ar !== undefined){
+        extraTags += '<span class="tag rate '+rateClass(e.ar)+'">AI '+e.ar+'%</span>';
+      }
+      html += '<div class="entry"><div class="tags"><span class="tag year">'+e.y+'</span><span class="tag major">'+esc(e.m)+'</span>'+extraTags+'</div><div class="txt">'+esc(e.t)+'</div></div>';
+    });
+    resultsBodyEl.innerHTML = html;
+
+    if (filtered.length > state.renderLimit){
+      loadMoreRow.style.display = 'block';
+      loadMoreBtn.onclick = ()=>{
+        state.renderLimit += PAGE_SIZE;
+        renderResults();
+      };
+    } else {
+      loadMoreRow.style.display = 'none';
+    }
+  }
+
+  // ---- Search inputs ----
+  function applySearch(){
+    state.titleQuery = titleInput.value.trim();
+    state.majorQuery = majorInput.value.trim();
+    state.renderLimit = PAGE_SIZE;
+    renderResults();
+  }
+
+  searchBtn.addEventListener('click', applySearch);
+  [titleInput, majorInput].forEach(input=>{
+    input.addEventListener('keydown', e=>{
+      if (e.key === 'Enter') applySearch();
+    });
+  });
+
+  clearBtn.addEventListener('click', ()=>{
+    titleInput.value = '';
+    majorInput.value = '';
+    state.titleQuery = '';
+    state.majorQuery = '';
+    state.renderLimit = PAGE_SIZE;
+    renderResults();
+    titleInput.focus();
+  });
+
+  sortToggleEl.addEventListener('click', ()=>{
+    state.sortByCount = !state.sortByCount;
+    sortToggleEl.textContent = state.sortByCount ? '按数量 ↓' : '按名称 A-Z';
+    renderMajors();
+  });
+
+  // ---- Init ----
+  renderYearTabs();
+  renderMajors();
+  renderResults();
+})();
+</script>
+</body>
+</html>
