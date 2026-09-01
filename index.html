@@ -267,6 +267,7 @@
   }
   .tag.year{background:var(--brass-soft); color:#7A5B1D; border:1px solid #E3D3A3;}
   .tag.major{background:var(--accent-soft); color:var(--accent); border:1px solid #E4C9C2; max-width:150px; overflow:hidden; text-overflow:ellipsis;}
+  .tag.school{background:#E6EDF5; color:#345B7A; border:1px solid #C9D8E6; max-width:180px; overflow:hidden; text-overflow:ellipsis;}
   .tag.rate{font-weight:600;}
   .tag.rate-low{background:#E4EFE3; color:#3B6B37; border:1px solid #C9DFC6;}
   .tag.rate-mid{background:#FBF0DA; color:#8A6512; border:1px solid #EEDBAA;}
@@ -333,7 +334,7 @@
   <header class="site">
     <p class="eyebrow">THESIS TITLE ARCHIVE · REFERENCE INDEX</p>
     <h1 class="title">小单文章题目参考</h1>
-    <p class="subtitle">按年份、专业分类整理的论文题目索引库，支持跨年份检索题目与专业关键词；2026年数据额外收录论文查重率与AI（AIGC）检测率，用于选题参考与查重比对。</p>
+    <p class="subtitle">按年份、专业分类整理的论文题目索引库，支持跨年份检索题目、专业和学校关键词；2026年数据额外收录学校、论文查重率与 AI（AIGC）检测率，用于选题参考与查重比对。</p>
     <div class="stamp" id="statStamp"><b>—</b> 条题目 · 收录中</div>
 
     <div class="search-row">
@@ -343,7 +344,7 @@
       </div>
       <div class="search-box major-search">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-        <input id="majorInput" type="text" placeholder="专业关键词，例如：学前教育…" autocomplete="off">
+        <input id="majorInput" type="text" placeholder="专业 / 学校，例如：学前教育 / 保定学院…" autocomplete="off">
       </div>
       <button class="action-btn search-btn" id="searchBtn">搜索</button>
       <button class="action-btn clear-btn" id="clearBtn">清空</button>
@@ -379,7 +380,7 @@
   </footer>
 </div>
 
-<script>window.__TITLE_DATA={"years":["2026","2025","2024"],"stats":{"2024":{"total":153447,"majors":669},"2025":{"total":168334,"majors":754},"2026":{"total":47052,"majors":273}},"data":{}};</script>
+<script>window.__TITLE_DATA={"years":["2026","2025","2024"],"stats":{"2024":{"total":153447,"majors":669},"2025":{"total":168334,"majors":754},"2026":{"total":89952,"majors":421}},"data":{}};</script>
 <script src="data-2026.js"></script>
 <script src="data-2025.js"></script>
 <script src="data-2024.js"></script>
@@ -404,12 +405,12 @@
   });
 
   // ---- Flat list for search (built once) ----
-  // each raw row is [title, check_rate|null, ai_rate|null]
+  // each raw row is [title, check_rate|null, ai_rate|null, school|null]
   const FLAT = [];
   YEARS.forEach(y=>{
     Object.keys(DATA[y]).forEach(m=>{
       DATA[y][m].forEach(row=>{
-        FLAT.push({y, m, t:row[0], cr:row[1], ar:row[2]});
+        FLAT.push({y, m, t:row[0], cr:row[1], ar:row[2], s:row[3] || null});
       });
     });
   });
@@ -517,7 +518,7 @@
       if (state.scope !== 'all') list = list.filter(e=>e.y===state.scope);
       if (state.major) list = list.filter(e=>e.m===state.major);
       if (titleQ) list = list.filter(e => e.t.toLowerCase().includes(titleQ));
-      if (majorQ) list = list.filter(e => e.m.toLowerCase().includes(majorQ));
+      if (majorQ) list = list.filter(e => e.m.toLowerCase().includes(majorQ) || (e.s && e.s.toLowerCase().includes(majorQ)));
       return list;
     }
 
@@ -525,11 +526,11 @@
 
     if (state.scope !== 'all'){
       const arr = DATA[state.scope][state.major] || [];
-      return arr.map(row=>({y: state.scope, m: state.major, t:row[0], cr:row[1], ar:row[2]}));
+      return arr.map(row=>({y: state.scope, m: state.major, t:row[0], cr:row[1], ar:row[2], s:row[3] || null}));
     } else {
       let list = [];
       YEARS.forEach(y=>{
-        if (DATA[y][state.major]) DATA[y][state.major].forEach(row=> list.push({y, m: state.major, t:row[0], cr:row[1], ar:row[2]}));
+        if (DATA[y][state.major]) DATA[y][state.major].forEach(row=> list.push({y, m: state.major, t:row[0], cr:row[1], ar:row[2], s:row[3] || null}));
       });
       return list;
     }
@@ -541,7 +542,7 @@
     const majorLabel = state.major || '全部专业';
     const parts = [];
     if (state.titleQuery) parts.push('题目 “'+esc(state.titleQuery)+'”');
-    if (state.majorQuery) parts.push('专业 “'+esc(state.majorQuery)+'”');
+    if (state.majorQuery) parts.push('专业 / 学校 “'+esc(state.majorQuery)+'”');
     breadcrumbEl.innerHTML = '<b>'+scopeLabel+'</b> · <b>'+esc(majorLabel)+'</b>' + (parts.length ? ' · 搜索 ' + parts.join(' · ') : '');
   }
 
@@ -589,7 +590,8 @@
       if (e.ar !== null && e.ar !== undefined){
         extraTags += '<span class="tag rate '+rateClass(e.ar)+'">AI '+e.ar+'%</span>';
       }
-      html += '<div class="entry"><div class="tags"><span class="tag year">'+e.y+'</span><span class="tag major">'+esc(e.m)+'</span>'+extraTags+'</div><div class="txt">'+esc(e.t)+'</div></div>';
+      const schoolTag = e.s ? '<span class="tag school" title="'+esc(e.s)+'">'+esc(e.s)+'</span>' : '';
+      html += '<div class="entry"><div class="tags"><span class="tag year">'+e.y+'</span><span class="tag major">'+esc(e.m)+'</span>'+schoolTag+extraTags+'</div><div class="txt">'+esc(e.t)+'</div></div>';
     });
     resultsBodyEl.innerHTML = html;
 
